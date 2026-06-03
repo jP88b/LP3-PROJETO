@@ -8,22 +8,21 @@ import 'package:image_picker/image_picker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // NOTA: Em produção, mova essas credenciais para variáveis de ambiente (.env)
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: 'AIzaSyCQBLwhDaJBX2xI5PnqnjvdymgmpiAw15I',
-      appId: '1:610901048644:web:158129cb48d745c61f2b11',
-      messagingSenderId: '610901048644',
-      projectId: 'catalogo-livraria-a5e28',
-      storageBucket: 'catalogo-livraria-a5e28.firebasestorage.app',
+      apiKey: "AIzaSyCQBLwhDaJBX2xI5PnqnjvdymgmpiAw15I",
+      authDomain: "catalogo-livraria-a5e28.firebaseapp.com",
+      projectId: "catalogo-livraria-a5e28",
+      storageBucket: "catalogo-livraria-a5e28.appspot.com",
+      messagingSenderId: "61090148644",
+      appId: "1:61090148644:web:158129cb48d745c61f2b11",
+      measurementId: "G-KPB6LV779M",
     ),
   );
-  
+
   runApp(const MaterialApp(home: TelaLogin(), debugShowCheckedModeBanner: false));
 }
 
-// --- TELA DE LOGIN ---
 class TelaLogin extends StatefulWidget {
   const TelaLogin({super.key});
   @override
@@ -134,7 +133,6 @@ class _TelaLoginState extends State<TelaLogin> {
   }
 }
 
-// --- TELA DE REGISTRO ---
 class TelaRegistro extends StatefulWidget {
   const TelaRegistro({super.key});
   @override
@@ -226,7 +224,6 @@ class _TelaRegistroState extends State<TelaRegistro> {
   }
 }
 
-// --- CONTEXTO GLOBAL DE ABAS ---
 class EstruturaAbas extends StatefulWidget {
   const EstruturaAbas({super.key});
   @override
@@ -262,7 +259,6 @@ class _EstruturaAbasState extends State<EstruturaAbas> {
   }
 }
 
-// --- 1. TELA INICIAL (VITRINE) ---
 class TelaInicio extends StatelessWidget {
   const TelaInicio({super.key});
 
@@ -468,7 +464,6 @@ class TelaInicio extends StatelessWidget {
   }
 }
 
-// --- 2. TELA DO CARRINHO ---
 class TelaCarrinho extends StatelessWidget {
   const TelaCarrinho({super.key});
 
@@ -560,7 +555,6 @@ class TelaCarrinho extends StatelessWidget {
   }
 }
 
-// --- 3. TELA: GERENCIAR PRODUTOS ---
 class TelaGerenciarProdutos extends StatefulWidget {
   const TelaGerenciarProdutos({super.key});
 
@@ -582,12 +576,9 @@ class _TelaGerenciarProdutosState extends State<TelaGerenciarProdutos> {
 
   Future<void> _selecionarImagem() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? imagemSelecionada = await picker.pickImage(
-      source: ImageSource.gallery,
-    );
-
-    if (imagemSelecionada != null) {
-      final bytes = await imagemSelecionada.readAsBytes();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      final bytes = await image.readAsBytes();
       setState(() {
         _imagemBytes = bytes;
       });
@@ -598,11 +589,12 @@ class _TelaGerenciarProdutosState extends State<TelaGerenciarProdutos> {
     if (_imagemBytes == null) return _urlImagemExistente;
 
     try {
-      final ref = FirebaseStorage.instance.ref().child('capas_livros/$nomeDoArquivo.jpg');
-      final metadata = SettableMetadata(contentType: 'image/jpeg');
+      final ref = FirebaseStorage.instance.ref().child('capas_livros/$nomeDoArquivo.png');
+      final metadata = SettableMetadata(contentType: 'image/png');
       
-      await ref.putData(_imagemBytes!, metadata);
-      return await ref.getDownloadURL();
+      UploadTask uploadTask = ref.putData(_imagemBytes!, metadata);
+      TaskSnapshot snapshot = await uploadTask;
+      return await snapshot.ref.getDownloadURL();
     } catch (e) {
       print("Erro ao fazer upload da imagem: $e");
       return '';
