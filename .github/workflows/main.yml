@@ -395,7 +395,7 @@ class TelaInicio extends StatelessWidget {
     required BuildContext context,
     required String titulo, 
     required String autor, 
-    required String categoria, 
+    required String category, // Mantido como solicitado nos parâmetros requeridos do componente
     required String preco, 
     required String urlImagem,
     required VoidCallback onAddTap,
@@ -436,7 +436,7 @@ class TelaInicio extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(color: Colors.orange[50], borderRadius: BorderRadius.circular(5)),
-                    child: Text(categoria, style: TextStyle(color: Colors.orange[800], fontSize: 11, fontWeight: FontWeight.bold)),
+                    child: Text(category, style: TextStyle(color: Colors.orange[800], fontSize: 11, fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(height: 8),
                   Row(
